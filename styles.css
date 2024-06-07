@@ -106,6 +106,14 @@ body, html {
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-bottom: 10px;
+    cursor: grab;
+    transition: transform 0.2s ease; /* アニメーションの追加 */
+}
+
+.todo-item.over {
+    border: 2px dashed #007bff;
+    border-radius: 5px;
+    animation: scaleUp 0.2s forwards; /* スケールアップアニメーションの追加 */
 }
 
 .todo-item button {
@@ -172,5 +180,14 @@ body, html {
     100% {
         opacity: 0;
         transform: translateY(-50px);
+    }
+}
+
+@keyframes scaleUp {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.05);
     }
 }
