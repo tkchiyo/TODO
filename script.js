@@ -207,7 +207,7 @@ function initializeSortable(container = document.getElementById('todo-list')) {
 
 function updateStats() {
     const totalTasks = document.querySelectorAll('.todo-item').length;
-    const completedTasks = document.querySelectorAll('.todo-item span[style="text-decoration: line-through;"]').length;
-    document.getElementById('total-tasks').textContent = totalTasks;
-    document.getElementById('completed-tasks').textContent = completedTasks;
+    const completedTasks = document.querySelectorAll('.todo-item span[style*="line-through"]').length;
+    document.getElementById('total-tasks').textContent = `タスク総数: ${totalTasks}`;
+    document.getElementById('completed-tasks').textContent = `完了タスク: ${completedTasks}`;
 }
