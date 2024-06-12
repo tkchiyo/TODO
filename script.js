@@ -48,7 +48,7 @@ function createTodoItem(todoText, parent = document.getElementById('todo-list'))
     const completeButton = document.createElement('button');
     completeButton.textContent = '完了';
     completeButton.className = 'complete-button';
-    completeButton.addEventListener('touchstart', () => {
+    completeButton.addEventListener('pointerdown', () => { // pointerdownイベントに変更
         toggleCompleted(todoSpan, completeButton);
     });
     const deleteButton = document.createElement('button');
