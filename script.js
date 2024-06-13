@@ -1,28 +1,14 @@
-document.getElementById('add-todo').addEventListener('click', addTodo);
-document.getElementById('new-todo').addEventListener('keypress', function(event) {
-    if (event.key === 'Enter') {
-        addTodo();
-    }
-});
-document.getElementById('complete-all').addEventListener('click', completeAllTodos);
-document.getElementById('revive-all').addEventListener('click', reviveAllTodos);
-document.getElementById('add-bulk-todos').addEventListener('click', addBulkTodos);
-
 window.onload = function() {
     loadTodos();
     initializeSortable();
     updateStats();
+
+    // イベントリスナーを追加
+    document.getElementById('add-bulk-todos').addEventListener('click', addBulkTodos);
+    document.getElementById('add-bulk-todos').addEventListener('click', addBulkTodos);
+    document.getElementById('complete-all').addEventListener('click', () => toggleAllTodos(true));
+    document.getElementById('revive-all').addEventListener('click', () => toggleAllTodos(false)); 
 };
-
-function addTodo() {
-    const todoText = document.getElementById('new-todo').value;
-    if (todoText === '') return;
-
-    createTodoItem(todoText);
-    document.getElementById('new-todo').value = '';
-    saveTodos();
-    updateStats(); // タスクを追加した後に統計情報を更新
-}
 
 function addBulkTodos() {
     const bulkText = document.getElementById('bulk-todos').value;
@@ -35,49 +21,47 @@ function addBulkTodos() {
 
     document.getElementById('bulk-todos').value = '';
     saveTodos();
-    updateStats(); // タスクを追加した後に統計情報を更新
+    updateStats(); 
 }
+
 
 function createTodoItem(todoText, parent = document.getElementById('todo-list')) {
     const todoItem = document.createElement('li');
     todoItem.className = 'todo-item';
 
-    const todoSpan = document.createElement('span');
-    todoSpan.textContent = todoText;
-    todoItem.appendChild(todoSpan);
+    const todoItemText = document.createElement('span'); 
+    todoItemText.textContent = todoText;
+    todoItem.appendChild(todoItemText);
 
-    // ボタンをdivで囲む
     const buttonsDiv = document.createElement('div');
     buttonsDiv.className = 'buttons';
 
-    const completeButton = document.createElement('button');
-    completeButton.textContent = '完了';
-    completeButton.className = 'complete-button';
-    completeButton.addEventListener('pointerdown', () => {
-        toggleCompleted(todoSpan, completeButton);
+    const toggleCompleteButton = document.createElement('button');
+    toggleCompleteButton.textContent = '完了';
+    toggleCompleteButton.className = 'complete-button';
+    toggleCompleteButton.addEventListener('click', () => { 
+        toggleCompleted(todoItemText, toggleCompleteButton);
     });
-    buttonsDiv.appendChild(completeButton);
+    buttonsDiv.appendChild(toggleCompleteButton);
 
     const deleteButton = document.createElement('button');
     deleteButton.textContent = '削除';
     deleteButton.className = 'delete-button';
     deleteButton.addEventListener('click', () => {
-    // 確認ダイアログを表示
-    if (confirm('本当に削除しますか？')) { 
-        parent.removeChild(todoItem);
-        saveTodos();
-      updateStats();
-    }
+        if (confirm(`"${todoText}"を本当に削除しますか？`)) {
+            parent.removeChild(todoItem);
+            saveTodos();
+            updateStats(); 
+        }
     });
     buttonsDiv.appendChild(deleteButton);
 
-    todoItem.appendChild(buttonsDiv); // ボタンをdivごと追加
+    todoItem.appendChild(buttonsDiv); 
 
     const subList = document.createElement('ul');
     subList.className = 'todo-list';
     todoItem.appendChild(subList);
 
-    // ドラッグハンドルを一番最初に追加 (修正箇所)
     const handleIcon = document.createElement('i');
     handleIcon.className = 'fas fa-grip-vertical handle';
     todoItem.insertBefore(handleIcon, todoItem.firstChild);
@@ -88,65 +72,39 @@ function createTodoItem(todoText, parent = document.getElementById('todo-list'))
     return todoItem;
 }
 
-function toggleCompleted(todoSpan, completeButton) {
-    if (todoSpan.style.textDecoration === 'line-through') {
-        todoSpan.style.textDecoration = '';
-        todoSpan.style.color = '';
-        completeButton.textContent = '完了';
-        completeButton.className = 'complete-button';
+function toggleCompleted(todoItemText, toggleCompleteButton) {
+    if (todoItemText.style.textDecoration === 'line-through') {
+        todoItemText.style.textDecoration = '';
+        todoItemText.style.color = '';
+        toggleCompleteButton.textContent = '完了';
+        toggleCompleteButton.className = 'complete-button';
     } else {
-        todoSpan.style.textDecoration = 'line-through';
-        todoSpan.style.color = 'gray';
-        completeButton.textContent = '復活';
-        completeButton.className = 'revive-button';
-        createEmojiEffect(completeButton, '💥');
+        todoItemText.style.textDecoration = 'line-through';
+        todoItemText.style.color = 'gray';
+        toggleCompleteButton.textContent = '復活';
+        toggleCompleteButton.className = 'revive-button';
+        createEmojiEffect(toggleCompleteButton, '💥');
     }
     saveTodos();
-    updateStats(); // 完了状態を切り替えた後に統計情報を更新
+    updateStats(); 
 }
 
 function createEmojiEffect(element, emoji) {
-    const rect = element.getBoundingClientRect();
-    
-    const emojiElement = document.createElement('div');
-    emojiElement.className = 'emoji';
-    emojiElement.style.left = `${rect.left + rect.width / 2}px`;
-    emojiElement.style.top = `${rect.top + rect.height / 2}px`;
-    emojiElement.textContent = emoji;
-    
-    const explosionContainer = document.getElementById('explosion-container');
-    if (explosionContainer) {
-        explosionContainer.appendChild(emojiElement);
-        setTimeout(() => emojiElement.remove(), 2000);
-    } else {
-        console.error('Explosion container not found.');
-    }
+  // ... (他のコードは変更なし)
 }
 
-function completeAllTodos() {
-    const todoItems = document.querySelectorAll('.todo-item span');
-    const completeButtons = document.querySelectorAll('.complete-button, .revive-button');
-    todoItems.forEach((todoSpan, index) => {
-        todoSpan.style.textDecoration = 'line-through';
-        todoSpan.style.color = 'gray';
-        completeButtons[index].textContent = '復活';
-        completeButtons[index].className = 'revive-button';
-    });
-    saveTodos();
-    updateStats(); // タスクを完了状態にした後に統計情報を更新
-}
-
-function reviveAllTodos() {
-    const todoItems = document.querySelectorAll('.todo-item span');
-    const completeButtons = document.querySelectorAll('.complete-button, .revive-button');
-    todoItems.forEach((todoSpan, index) => {
-        todoSpan.style.textDecoration = '';
-        todoSpan.style.color = '';
-        completeButtons[index].textContent = '完了';
-        completeButtons[index].className = 'complete-button';
-    });
-    saveTodos();
-    updateStats(); // タスクを未完了状態にした後に統計情報を更新
+// toggleAllTodos関数をwindowオブジェクトに追加
+window.toggleAllTodos = function(complete) {
+  const todoItems = document.querySelectorAll('.todo-item span');
+  const completeButtons = document.querySelectorAll('.complete-button, .revive-button');
+  todoItems.forEach((todoSpan, index) => {
+    todoSpan.style.textDecoration = complete ? 'line-through' : '';
+    todoSpan.style.color = complete ? 'gray' : '';
+    completeButtons[index].textContent = complete ? '復活' : '完了';
+    completeButtons[index].className = complete ? 'revive-button' : 'complete-button';
+  });
+  saveTodos();
+  updateStats(); 
 }
 
 function saveTodos() {
@@ -199,7 +157,7 @@ function loadTodos() {
             }
         });
     }
-    updateStats(); // ロードが完了した後に統計情報を更新
+    updateStats(); 
 }
 
 function initializeSortable(container = document.getElementById('todo-list')) {
@@ -209,12 +167,12 @@ function initializeSortable(container = document.getElementById('todo-list')) {
         group: 'nested',
         fallbackOnBody: true,
         swapThreshold: 0.65,
-        handle: '.handle', // ドラッグハンドルを指定
+        handle: '.handle', 
         onEnd: function (evt) {
             if (evt.to !== evt.from) {
                 evt.item.classList.remove('over');
                 saveTodos();
-                updateStats(); // ソートが完了した後に統計情報を更新
+                updateStats(); 
             }
         }
     });

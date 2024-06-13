@@ -11,14 +11,12 @@
 <body>
     <div id="todo-container">
         <h1>TODOリスト</h1>
-        <input type="text" id="new-todo" placeholder="新しいTODO">
-        <button id="add-todo">追加</button>
+    <textarea id="bulk-todos" placeholder="まとめて追加するタスクを改行で区切って入力してください。"></textarea>
+    <button id="add-bulk-todos">まとめて追加</button>
         <div class="bulk-actions">
             <button id="complete-all">すべて完了にする</button>
             <button id="revive-all">すべて復活する</button>
         </div>
-        <textarea id="bulk-todos" placeholder="まとめて追加するタスクを改行で区切って入力してください。"></textarea>
-        <button id="add-bulk-todos">まとめて追加</button>
         <div id="stats">
             <p><span id="total-tasks">0</span></p>
             <p><span id="completed-tasks">0</span></p>
