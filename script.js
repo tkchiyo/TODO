@@ -62,9 +62,12 @@ function createTodoItem(todoText, parent = document.getElementById('todo-list'))
     deleteButton.textContent = '削除';
     deleteButton.className = 'delete-button';
     deleteButton.addEventListener('click', () => {
+    // 確認ダイアログを表示
+    if (confirm('本当に削除しますか？')) { 
         parent.removeChild(todoItem);
         saveTodos();
-        updateStats(); // タスクを削除した後に統計情報を更新
+      updateStats();
+    }
     });
     buttonsDiv.appendChild(deleteButton);
 
