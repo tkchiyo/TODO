@@ -44,13 +44,20 @@ function createTodoItem(todoText, parent = document.getElementById('todo-list'))
 
     const todoSpan = document.createElement('span');
     todoSpan.textContent = todoText;
+    todoItem.appendChild(todoSpan);
+
+    // ボタンをdivで囲む
+    const buttonsDiv = document.createElement('div');
+    buttonsDiv.className = 'buttons';
 
     const completeButton = document.createElement('button');
     completeButton.textContent = '完了';
     completeButton.className = 'complete-button';
-    completeButton.addEventListener('pointerdown', () => { // pointerdownイベントに変更
+    completeButton.addEventListener('pointerdown', () => {
         toggleCompleted(todoSpan, completeButton);
     });
+    buttonsDiv.appendChild(completeButton);
+
     const deleteButton = document.createElement('button');
     deleteButton.textContent = '削除';
     deleteButton.className = 'delete-button';
@@ -59,18 +66,23 @@ function createTodoItem(todoText, parent = document.getElementById('todo-list'))
         saveTodos();
         updateStats(); // タスクを削除した後に統計情報を更新
     });
+    buttonsDiv.appendChild(deleteButton);
+
+    todoItem.appendChild(buttonsDiv); // ボタンをdivごと追加
 
     const subList = document.createElement('ul');
     subList.className = 'todo-list';
-
-    todoItem.appendChild(todoSpan);
-    todoItem.appendChild(completeButton);
-    todoItem.appendChild(deleteButton);
     todoItem.appendChild(subList);
+
+    // ドラッグハンドルを一番最初に追加 (修正箇所)
+    const handleIcon = document.createElement('i');
+    handleIcon.className = 'fas fa-grip-vertical handle';
+    todoItem.insertBefore(handleIcon, todoItem.firstChild);
+
     parent.appendChild(todoItem);
 
     initializeSortable(subList);
-    return todoItem; // todoItemを返すように修正
+    return todoItem;
 }
 
 function toggleCompleted(todoSpan, completeButton) {
@@ -194,6 +206,7 @@ function initializeSortable(container = document.getElementById('todo-list')) {
         group: 'nested',
         fallbackOnBody: true,
         swapThreshold: 0.65,
+        handle: '.handle', // ドラッグハンドルを指定
         onEnd: function (evt) {
             if (evt.to !== evt.from) {
                 evt.item.classList.remove('over');

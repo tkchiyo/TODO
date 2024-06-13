@@ -108,12 +108,18 @@ body, html {
     margin-bottom: 10px;
     cursor: grab;
     transition: transform 0.2s ease; /* アニメーションの追加 */
+    justify-content: flex-start; /* 左寄せにする */
+
 }
 
 .todo-item.over {
     border: 2px dashed #007bff;
     border-radius: 5px;
     animation: scaleUp 0.2s forwards; /* スケールアップアニメーションの追加 */
+}
+
+.todo-item span { /* タスクのテキスト */
+    margin-left: 10px; /* ドラッグハンドルとの間隔 */
 }
 
 .todo-item button {
@@ -170,6 +176,17 @@ body, html {
     position: absolute;
     font-size: 6rem;
     animation: fade-out 2s forwards;
+}
+
+.todo-item .handle {
+    cursor: grab;
+    margin-right: 10px; /* ボタンとの間隔 */
+}
+
+.buttons {
+    display: flex; /* ボタンを横に並べる */
+    align-items: center; /* 垂直方向に中央揃え */
+    margin-left: auto; /* 右寄せにする */
 }
 
 @keyframes fade-out {
