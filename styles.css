@@ -84,14 +84,7 @@ body, html {
     border-radius: 5px;
     margin-bottom: 10px;
     cursor: grab;
-    transition: transform 0.2s ease;
     justify-content: flex-start; 
-}
-
-.todo-item.over {
-    border: 2px dashed #007bff;
-    border-radius: 5px;
-    animation: scaleUp 0.2s forwards; 
 }
 
 .todo-item span {

@@ -162,12 +162,26 @@ function loadTodos() {
 
 function initializeSortable(container = document.getElementById('todo-list')) {
     new Sortable(container, {
-        animation: 150,
-        ghostClass: 'sortable-ghost',
+        animation: 100,
+        easing: "cubic-bezier(1, 0, 0, 1)",
         group: 'nested',
         fallbackOnBody: true,
-        swapThreshold: 0.65,
+        swapThreshold: 1,
         handle: '.handle', 
+        // ghostClass: 'sortable-ghost', // 削除
+
+        // ドラッグ開始時に色を変更
+        onChoose: function (evt) {
+            evt.item.style.backgroundColor = '#f0f0f0'; // ドラッグ中の背景色 (お好みで変更)
+            evt.item.style.border = '2px dashed #007bff'; // 破線ボーダー (お好みで変更)
+        },
+
+        // ドラッグ終了時に色を元に戻す
+        onUnchoose: function (evt) {
+            evt.item.style.backgroundColor = '';
+            evt.item.style.border = '';
+        },
+
         onEnd: function (evt) {
             if (evt.to !== evt.from) {
                 evt.item.classList.remove('over');
