@@ -126,6 +126,7 @@ function saveTodos() {
         });
     });
     localStorage.setItem('todos', JSON.stringify(todos));
+    saveOrder();
 }
 
 function loadTodos() {
@@ -156,8 +157,30 @@ function loadTodos() {
                 });
             }
         });
+        loadOrder();
     }
     updateStats(); 
+}
+
+function saveOrder() {
+    const order = [];
+    document.querySelectorAll('.todo-item').forEach(todoItem => {
+        order.push(todoItem.querySelector('span').textContent);
+    });
+    localStorage.setItem('todo-order', JSON.stringify(order));
+}
+
+function loadOrder() {
+    const order = JSON.parse(localStorage.getItem('todo-order'));
+    if (order) {
+        const todoList = document.getElementById('todo-list');
+        order.forEach(todoText => {
+            const todoItem = Array.from(todoList.children).find(item => item.querySelector('span').textContent === todoText);
+            if (todoItem) {
+                todoList.appendChild(todoItem);
+            }
+        });
+    }
 }
 
 function initializeSortable(container = document.getElementById('todo-list')) {
@@ -168,12 +191,11 @@ function initializeSortable(container = document.getElementById('todo-list')) {
         fallbackOnBody: true,
         swapThreshold: 1,
         handle: '.handle', 
-        // ghostClass: 'sortable-ghost', // 削除
 
         // ドラッグ開始時に色を変更
         onChoose: function (evt) {
-            evt.item.style.backgroundColor = '#f0f0f0'; // ドラッグ中の背景色 (お好みで変更)
-            evt.item.style.border = '2px dashed #007bff'; // 破線ボーダー (お好みで変更)
+            evt.item.style.backgroundColor = '#f0f0f0';
+            evt.item.style.border = '2px dashed #007bff';
         },
 
         // ドラッグ終了時に色を元に戻す
@@ -183,11 +205,10 @@ function initializeSortable(container = document.getElementById('todo-list')) {
         },
 
         onEnd: function (evt) {
-            if (evt.to !== evt.from) {
+            saveOrder();  // ドラッグ終了時に順序を保存
                 evt.item.classList.remove('over');
                 saveTodos();
                 updateStats(); 
-            }
         }
     });
 }
