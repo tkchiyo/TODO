@@ -89,8 +89,53 @@ function toggleCompleted(todoItemText, toggleCompleteButton) {
     updateStats(); 
 }
 
-function createEmojiEffect(element, emoji) {
-  // ... (他のコードは変更なし)
+let emojiCount = 0; // 絵文字表示回数をカウントする変数
+
+function createEmojiEffect(element) {
+    const explosionContainer = document.getElementById('explosion-container');
+    const numEmojis = 15; 
+    const emojis = [];
+    const emojiList = ['🎉', '✨', '🎊', '🥳', '🤩', '👍', '👏', '🙌', '😎', '🔥', '🚀', '💯', '🏆', '🥇', '🎯'];
+    const poopEmoji = '💩';
+
+    emojiCount++; // カウントアップ
+
+    for (let i = 0; i < numEmojis; i++) {
+        const emojiSpan = document.createElement('span');
+        // 15回に1回の確率でPoop絵文字にする
+        const emoji = emojiCount % 15 === 0 ? poopEmoji : emojiList[Math.floor(Math.random() * emojiList.length)];
+        emojiSpan.textContent = emoji;
+        emojiSpan.classList.add('emoji');
+
+        // 重ならない位置を探す
+        let x, y;
+        do {
+            x = Math.random() * (window.innerWidth - emojiSpan.offsetWidth);
+            y = Math.random() * (window.innerHeight - emojiSpan.offsetHeight);
+        } while (emojis.some(existingEmoji => {
+            const dx = Math.abs(x - existingEmoji.x);
+            const dy = Math.abs(y - existingEmoji.y);
+            return dx < emojiSpan.offsetWidth && dy < emojiSpan.offsetHeight; // 重なっているか判定
+        }));
+
+        emojiSpan.style.left = x + 'px';
+        emojiSpan.style.top = y + 'px';
+        emojiSpan.style.animationDelay = Math.random() * 0.5 + 's'; 
+
+        explosionContainer.appendChild(emojiSpan);
+        emojis.push({ x, y }); // 配置した絵文字の位置を記録
+
+        // アニメーション終了後に要素を削除
+        emojiSpan.addEventListener('animationend', () => {
+            explosionContainer.removeChild(emojiSpan);
+            emojis.splice(emojis.indexOf({ x, y }), 1); // 削除した絵文字の位置を配列から削除
+        });
+
+    }
+    // 15回ごとにカウントをリセット
+    if (emojiCount === 15) {
+        emojiCount = 0;
+    }
 }
 
 // toggleAllTodos関数をwindowオブジェクトに追加
