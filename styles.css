@@ -185,17 +185,18 @@ body, html {
   }
 
   .todo-item {
-    flex-direction: column; /* タスクを縦並びにする */
-    align-items: flex-start; /* 左寄せにする */
+    /* flex-direction: column; */ /* 縦並びをやめる */
+    align-items: center; /* 中央寄せに戻す */
+    gap: 10px; /* ハンドルとテキストの間に隙間を作る */
   }
 
   .todo-item span {
-    flex-grow: 1; /* 余ったスペースを最大限に利用 */
+    /* flex-grow: 1; */ /* 余白調整を削除 */
   }
 
   .todo-item .buttons {
-    width: 100%; /* 全幅にする */
-    margin-top: 5px; /* ボタンとテキストの間に少し余白を追加 */
+    width: auto; /* ボタンの幅を自動にする */
+    margin-top: 0; /* 上部の余白を削除 */
   }
 }
 
