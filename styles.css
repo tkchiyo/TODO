@@ -189,8 +189,13 @@ body, html {
     align-items: flex-start; /* 左寄せにする */
   }
 
-  .todo-item span, .todo-item .buttons {
+  .todo-item span {
+    flex-grow: 1; /* 余ったスペースを最大限に利用 */
+  }
+
+  .todo-item .buttons {
     width: 100%; /* 全幅にする */
+    margin-top: 5px; /* ボタンとテキストの間に少し余白を追加 */
   }
 }
 
