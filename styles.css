@@ -198,6 +198,10 @@ body, html {
     width: auto; /* ボタンの幅を自動にする */
     margin-top: 0; /* 上部の余白を削除 */
   }
+
+  .todo-item > .todo-list { /* 子要素のリストを非表示にする */
+    display: none;
+  }
 }
 
 /* フォーカス時のスタイル */
