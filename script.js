@@ -68,8 +68,7 @@ function createTodoItem(todoText, parent = document.getElementById('todo-list'))
 
     parent.appendChild(todoItem);
 
-    initializeSortable(subList);
-    return todoItem;
+    return todoItem; // initializeSortableの呼び出しを削除
 }
 
 function toggleCompleted(todoItemText, toggleCompleteButton) {
@@ -156,18 +155,9 @@ function saveTodos() {
     const todos = [];
     document.querySelectorAll('.todo-item').forEach(todoItem => {
         const todoSpan = todoItem.querySelector('span');
-        const subTodos = [];
-        todoItem.querySelectorAll('ul .todo-item').forEach(subTodoItem => {
-            const subTodoSpan = subTodoItem.querySelector('span');
-            subTodos.push({
-                text: subTodoSpan.textContent,
-                completed: subTodoSpan.style.textDecoration === 'line-through'
-            });
-        });
         todos.push({
             text: todoSpan.textContent,
-            completed: todoSpan.style.textDecoration === 'line-through',
-            subTodos: subTodos
+            completed: todoSpan.style.textDecoration === 'line-through'
         });
     });
     localStorage.setItem('todos', JSON.stringify(todos));
@@ -186,20 +176,6 @@ function loadTodos() {
                 todoSpan.style.color = 'gray';
                 completeButton.textContent = '復活';
                 completeButton.className = 'revive-button';
-            }
-            if (todo.subTodos) {
-                todo.subTodos.forEach(subTodo => {
-                    const subList = todoItem.querySelector('ul');
-                    const subTodoItem = createTodoItem(subTodo.text, subList);
-                    if (subTodo.completed) {
-                        const subTodoSpan = subTodoItem.querySelector('span');
-                        const completeButton = subTodoItem.querySelector('button');
-                        subTodoSpan.style.textDecoration = 'line-through';
-                        subTodoSpan.style.color = 'gray';
-                        completeButton.textContent = '復活';
-                        completeButton.className = 'revive-button';
-                    }
-                });
             }
         });
         loadOrder();
